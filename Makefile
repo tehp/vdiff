@@ -2,22 +2,22 @@ CC = g++-9
 CCFLAGS = -o vdiff -Wall
 
 main: comparison genome suffixnode suffixtree
-	$(CC) -c main.cpp && $(CC) *.o $(CCFLAGS) && mv vdiff dist/vdiff
+	$(CC) -c src/main.cpp && $(CC) *.o $(CCFLAGS) && mv vdiff dist/vdiff
 
 test: main
 	./dist/vdiff
 
 genome: 
-	$(CC) -c genome.cpp
+	$(CC) -c src/genome.cpp
 
 comparison:
-	$(CC) -c comparison.cpp
+	$(CC) -c src/comparison.cpp
 
 suffixtree:
-	$(CC) -c suffixtree.cpp
+	$(CC) -c src/suffixtree.cpp
 
 suffixnode:
-	$(CC) -c suffixnode.cpp
+	$(CC) -c src/suffixnode.cpp
 
 clean:
 	rm -rf *.o && rm dist/vdiff
