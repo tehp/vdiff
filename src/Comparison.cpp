@@ -37,11 +37,11 @@ void Comparison::compare_suffix_tree()
     nodes_tree2.erase(nodes_tree2.begin());
     nodes_tree2.erase(nodes_tree2.begin());
 
-    // Try speeding things up by removing strings of length < 10
-    std::cout << "Trimming genome1" << std::endl;
-    nodes_tree1 = remove_small_nodes(nodes_tree1, 10);
-    std::cout << "Trimming genome2" << std::endl;
-    nodes_tree2 = remove_small_nodes(nodes_tree2, 10);
+    // Removing strings of length < 10
+    // std::cout << "Trimming genome1" << std::endl;
+    // nodes_tree1 = remove_small_nodes(nodes_tree1, 10);
+    // std::cout << "Trimming genome2" << std::endl;
+    // nodes_tree2 = remove_small_nodes(nodes_tree2, 10);
 
     // Sort to make repeats easy to remove
     std::cout << "Sorting genome1" << std::endl;
@@ -63,6 +63,21 @@ void Comparison::compare_suffix_tree()
     nodes_tree2 = remove_repeating_nodes(nodes_tree2);
 
     // Remove strings that are substrings of another string
+    nodes_tree1 = remove_substrings(nodes_tree1);
+    nodes_tree2 = remove_substrings(nodes_tree2);
+
+    for (std::list<SuffixNode>::iterator it = nodes_tree1.begin(); it != nodes_tree1.end(); ++it) {
+        std::cout << it->get_sub() << "\n" << std::endl;
+    }
+
+    std::cout << "=====" << std::endl;
+
+    for (std::list<SuffixNode>::iterator it = nodes_tree2.begin(); it != nodes_tree2.end(); ++it) {
+        std::cout << it->get_sub() << "\n" << std::endl;
+    }
+
+    std::cout << nodes_tree1.size() << std::endl;
+    std::cout << nodes_tree2.size() << std::endl;
 
     // Combine similarities from the two genomes
 }
@@ -90,14 +105,54 @@ std::list<SuffixNode> Comparison::remove_repeating_nodes(std::list<SuffixNode> l
     std::string last = "";
     for (std::list<SuffixNode>::iterator it = list.begin(); it != list.end(); ++it)
     {
-        if (it->get_sub() == last) {
+        if (it->get_sub() == last)
+        {
             list.erase(it);
-        } else {
+        }
+        else
+        {
             last = it->get_sub();
             it = next(it);
         }
     }
     return list;
+}
+
+std::list<SuffixNode> Comparison::remove_substrings(std::list<SuffixNode> list)
+{
+    std::list<SuffixNode> original = list;
+    std::list<SuffixNode>::iterator it = list.begin();
+
+    while (it != list.end())
+    {
+        if (check_if_substring(it->get_sub(), original))
+        {
+            auto delete_it = it;
+            it = next(it);
+            list.erase(delete_it);
+        }
+        else
+        {
+            it = next(it);
+        }
+        std::cout << list.size() << std::endl;
+    }
+    return list;
+}
+
+int Comparison::check_if_substring(std::string str, std::list<SuffixNode> list)
+{
+    for (std::list<SuffixNode>::iterator it = list.begin(); it != list.end(); ++it)
+    {
+        if (it->get_sub().length() > str.length())
+        {
+            if (it->get_sub() != str && it->get_sub().find(str) != std::string::npos)
+            {
+                return 1;
+            }
+        }
+    }
+    return 0;
 }
 
 SuffixTree Comparison::build_suffix_tree(std::string genome)
