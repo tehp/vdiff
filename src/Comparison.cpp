@@ -31,11 +31,56 @@ void Comparison::compare_suffix_tree()
     nodes_tree2.erase(nodes_tree2.begin());
     nodes_tree2.erase(nodes_tree2.begin());
 
-    for (std::vector<SuffixNode>::iterator it = nodes_tree1.begin(); it != nodes_tree1.end(); ++it)
+    // Sort to make repeats easy to remove
+    std::cout << "Sorting genome1" << std::endl;
+    sort(nodes_tree1.begin(), nodes_tree1.end());
+    std::cout << "Sorting genome2" << std::endl;
+    sort(nodes_tree2.begin(), nodes_tree2.end());
+
+    // Unique Matches:
+    // Sequences in genome 1 and 2 that:
+    // occur exactly once in genome1 AND exactly once in genome2
+    // are not part of any larger sequence (aren't a subsequence)
+
+    // Remove dupes from genome1
+    std::cout << "Removing dupes genome1" << std::endl;
+    std::cout << nodes_tree1.size() << std::endl;
+    nodes_tree1 = remove_repeating_nodes(nodes_tree1);
+
+    // Remove dupes from genome2
+    std::cout << "Removing dupes genome2" << std::endl;
+    nodes_tree2 = remove_repeating_nodes(nodes_tree2);
+
+    // Remove strings that are substrings of another string
+
+    // Combind similarities from the two genomes
+}
+
+std::vector<SuffixNode> Comparison::remove_repeating_nodes(std::vector<SuffixNode> vec)
+{
+    for (std::vector<SuffixNode>::iterator it = vec.begin(); it != vec.end(); ++it)
     {
-        std::cout << it->get_sub() << std::endl;
+        auto it2 = it;
+        advance(it2, 1);
+        // std::cout << it->get_sub() << " / " << it2->get_sub() << std::endl;
+        if (it->get_sub() == it2->get_sub())
+        {
+            // found match, remove all other occurances with same text as it
+            std::string match_string = it->get_sub();
+            while (it2->get_sub() == match_string && it2 != vec.end())
+            {
+                vec.erase(it2);
+                it2 = it;
+                advance(it2, 1);
+            }
+
+            // remove original (last occurance remaining) of it
+            auto it_delete = it;
+            advance(it, -1);
+            vec.erase(it_delete);
+        }
     }
-    
+    return vec;
 }
 
 SuffixTree Comparison::build_suffix_tree(std::string genome)

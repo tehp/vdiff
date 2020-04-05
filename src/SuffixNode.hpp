@@ -13,6 +13,7 @@ public:
     std::string sub;
     std::vector<int> ch;
     std::string get_sub();
+    bool operator<(const SuffixNode &node) const;
 
 private:
 };
