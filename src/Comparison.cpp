@@ -31,6 +31,12 @@ void Comparison::compare_suffix_tree()
     nodes_tree2.erase(nodes_tree2.begin());
     nodes_tree2.erase(nodes_tree2.begin());
 
+    // Try speeding things up by removing strings of length < 10
+    std::cout << "Trimming genome1" << std::endl;
+    nodes_tree1 = remove_small_nodes(nodes_tree1, 10);
+    std::cout << "Trimming genome2" << std::endl;
+    nodes_tree2 = remove_small_nodes(nodes_tree2, 10);
+
     // Sort to make repeats easy to remove
     std::cout << "Sorting genome1" << std::endl;
     sort(nodes_tree1.begin(), nodes_tree1.end());
@@ -44,7 +50,6 @@ void Comparison::compare_suffix_tree()
 
     // Remove dupes from genome1
     std::cout << "Removing dupes genome1" << std::endl;
-    std::cout << nodes_tree1.size() << std::endl;
     nodes_tree1 = remove_repeating_nodes(nodes_tree1);
 
     // Remove dupes from genome2
@@ -56,10 +61,31 @@ void Comparison::compare_suffix_tree()
     // Combind similarities from the two genomes
 }
 
+std::vector<SuffixNode> Comparison::remove_small_nodes(std::vector<SuffixNode> vec, int size)
+{
+    int i = vec.size();
+    int total = vec.size();
+
+    // don't delete end 
+    auto end = vec.end();
+    advance(end, -1);
+    for (std::vector<SuffixNode>::iterator it = vec.begin(); it != end; ++it)
+    {
+        std::cout << "trimmming... " << i-- << "/" << total << std::endl;
+        if (it->get_sub().length() < size)
+        {
+            vec.erase(it);
+        }
+    }
+    return vec;
+}
+
 std::vector<SuffixNode> Comparison::remove_repeating_nodes(std::vector<SuffixNode> vec)
 {
+    int progress = vec.size();
     for (std::vector<SuffixNode>::iterator it = vec.begin(); it != vec.end(); ++it)
     {
+        std::cout << progress-- << std::endl;
         auto it2 = it;
         advance(it2, 1);
         // std::cout << it->get_sub() << " / " << it2->get_sub() << std::endl;
@@ -69,6 +95,8 @@ std::vector<SuffixNode> Comparison::remove_repeating_nodes(std::vector<SuffixNod
             std::string match_string = it->get_sub();
             while (it2->get_sub() == match_string && it2 != vec.end())
             {
+                std::cout << "stuck looking at matches: " << progress << std::endl;
+                progress--;
                 vec.erase(it2);
                 it2 = it;
                 advance(it2, 1);

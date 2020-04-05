@@ -13,6 +13,7 @@ public:
     void compare_suffix_tree();
     SuffixTree build_suffix_tree(std::string genome);
     std::vector<SuffixNode> remove_repeating_nodes(std::vector<SuffixNode>);
+    std::vector<SuffixNode> remove_small_nodes(std::vector<SuffixNode>, int size);
 
 private:
     Genome genome1;
