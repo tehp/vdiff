@@ -1,6 +1,7 @@
 #include <functional>
 #include <iostream>
 #include <vector>
+#include <list>
 #include "SuffixTree.hpp"
 
 using namespace vdiff;
@@ -14,7 +15,8 @@ SuffixTree::SuffixTree(const std::string &str)
     }
 }
 
-std::vector<SuffixNode> SuffixTree::get_nodes() {
+std::vector<SuffixNode> SuffixTree::get_nodes()
+{
     return nodes;
 }
 

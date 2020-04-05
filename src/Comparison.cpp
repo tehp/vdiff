@@ -22,10 +22,16 @@ void Comparison::compare_suffix_tree()
     SuffixTree tree1 = build_suffix_tree(gen1);
     SuffixTree tree2 = build_suffix_tree(gen2);
 
-    std::vector<SuffixNode> nodes_tree1 = tree1.get_nodes();
-    std::vector<SuffixNode> nodes_tree2 = tree2.get_nodes();
+    std::vector<SuffixNode> nodes_tree1_vector = tree1.get_nodes();
+    std::vector<SuffixNode> nodes_tree2_vector = tree2.get_nodes();
 
-    // Remove first 2 elements from vectors: emptry string, and entire string
+    std::list<SuffixNode> nodes_tree1;
+    std::list<SuffixNode> nodes_tree2;
+
+    std::copy(nodes_tree1_vector.begin(), nodes_tree1_vector.end(), std::back_inserter(nodes_tree1));
+    std::copy(nodes_tree2_vector.begin(), nodes_tree2_vector.end(), std::back_inserter(nodes_tree2));
+
+    // Remove first 2 elements from lists: emptry string, and entire string
     nodes_tree1.erase(nodes_tree1.begin());
     nodes_tree1.erase(nodes_tree1.begin());
     nodes_tree2.erase(nodes_tree2.begin());
@@ -39,9 +45,9 @@ void Comparison::compare_suffix_tree()
 
     // Sort to make repeats easy to remove
     std::cout << "Sorting genome1" << std::endl;
-    sort(nodes_tree1.begin(), nodes_tree1.end());
+    nodes_tree1.sort();
     std::cout << "Sorting genome2" << std::endl;
-    sort(nodes_tree2.begin(), nodes_tree2.end());
+    nodes_tree2.sort();
 
     // Unique Matches:
     // Sequences in genome 1 and 2 that:
@@ -58,57 +64,40 @@ void Comparison::compare_suffix_tree()
 
     // Remove strings that are substrings of another string
 
-    // Combind similarities from the two genomes
+    // Combine similarities from the two genomes
 }
 
-std::vector<SuffixNode> Comparison::remove_small_nodes(std::vector<SuffixNode> vec, int size)
+std::list<SuffixNode> Comparison::remove_small_nodes(std::list<SuffixNode> list, int size)
 {
-    int i = vec.size();
-    int total = vec.size();
+    int i = list.size();
+    int total = list.size();
 
-    // don't delete end 
-    auto end = vec.end();
+    // don't delete end
+    auto end = list.end();
     advance(end, -1);
-    for (std::vector<SuffixNode>::iterator it = vec.begin(); it != end; ++it)
+    for (std::list<SuffixNode>::iterator it = list.begin(); it != end; ++it)
     {
-        std::cout << "trimmming... " << i-- << "/" << total << std::endl;
         if (it->get_sub().length() < size)
         {
-            vec.erase(it);
+            list.erase(it);
         }
     }
-    return vec;
+    return list;
 }
 
-std::vector<SuffixNode> Comparison::remove_repeating_nodes(std::vector<SuffixNode> vec)
+std::list<SuffixNode> Comparison::remove_repeating_nodes(std::list<SuffixNode> list)
 {
-    int progress = vec.size();
-    for (std::vector<SuffixNode>::iterator it = vec.begin(); it != vec.end(); ++it)
+    std::string last = "";
+    for (std::list<SuffixNode>::iterator it = list.begin(); it != list.end(); ++it)
     {
-        std::cout << progress-- << std::endl;
-        auto it2 = it;
-        advance(it2, 1);
-        // std::cout << it->get_sub() << " / " << it2->get_sub() << std::endl;
-        if (it->get_sub() == it2->get_sub())
-        {
-            // found match, remove all other occurances with same text as it
-            std::string match_string = it->get_sub();
-            while (it2->get_sub() == match_string && it2 != vec.end())
-            {
-                std::cout << "stuck looking at matches: " << progress << std::endl;
-                progress--;
-                vec.erase(it2);
-                it2 = it;
-                advance(it2, 1);
-            }
-
-            // remove original (last occurance remaining) of it
-            auto it_delete = it;
-            advance(it, -1);
-            vec.erase(it_delete);
+        if (it->get_sub() == last) {
+            list.erase(it);
+        } else {
+            last = it->get_sub();
+            it = next(it);
         }
     }
-    return vec;
+    return list;
 }
 
 SuffixTree Comparison::build_suffix_tree(std::string genome)

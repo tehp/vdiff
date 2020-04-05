@@ -1,6 +1,6 @@
 #include <functional>
 #include <iostream>
-#include <vector>
+#include <list>
 #include "SuffixNode.hpp"
 
 using namespace vdiff;

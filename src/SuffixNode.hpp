@@ -1,5 +1,6 @@
 #include <functional>
 #include <iostream>
+#include <list>
 #include <vector>
 
 namespace vdiff
