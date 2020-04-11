@@ -9,29 +9,29 @@ SuffixNode::SuffixNode() {}
 
 SuffixNode::~SuffixNode() {}
 
-SuffixNode::SuffixNode(const std::string &sub, std::initializer_list<int> children) : sub(sub)
+SuffixNode::SuffixNode(const std::string& sub, std::initializer_list<int> children) : sub(sub)
 {
-    ch.insert(ch.end(), children);
+	ch.insert(ch.end(), children);
 }
 
-// SuffixNode::SuffixNode(const std::string &_sub, std::initializer_list<int> children, const std::string &_label)
-// {
-//     sub = _sub;
-//     // label = _label;
-//     ch.insert(ch.end(), children);
-// }
+ SuffixNode::SuffixNode(const std::string &_sub, std::initializer_list<int> children, const std::string &_label)
+ {
+     sub = _sub;
+     label = _label;
+     ch.insert(ch.end(), children);
+ }
 
 std::string SuffixNode::get_sub()
 {
-    return sub;
+	return sub;
 }
 
-// std::string SuffixNode::get_label()
-// {
-//     return label;
-// }
+ std::string SuffixNode::get_label()
+ {
+     return label;
+ }
 
-bool SuffixNode::operator<(const SuffixNode &node) const
+bool SuffixNode::operator<(const SuffixNode& node) const
 {
-    return sub < node.sub;
+	return sub < node.sub;
 }

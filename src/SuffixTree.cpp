@@ -12,11 +12,11 @@ SuffixTree::SuffixTree(const std::string &A, const std::string &B)
     nodes.push_back(SuffixNode{});
     for (size_t i = 0; i < A.length(); i++)
     {
-        addSuffix(A.substr(i));
+        addSuffix(A.substr(i), "A");
     }
     for (size_t i = 0; i < B.length(); i++)
     {
-        addSuffix(B.substr(i));
+        addSuffix(B.substr(i), "B");
     }
 }
 
@@ -75,7 +75,7 @@ void SuffixTree::visualize()
         auto children = nodes[n].ch;
         if (children.size() == 0)
         {
-            std::cout << "- " << nodes[n].sub << " : " << '\n';
+            std::cout << "- " << nodes[n].sub << " : " << nodes[n].get_label() <<"\n";
             return;
         }
         std::cout << "+ " << nodes[n].sub << '\n';
@@ -98,7 +98,7 @@ void SuffixTree::visualize()
     f(0, "");
 }
 
-void SuffixTree::addSuffix(const std::string &suf)
+void SuffixTree::addSuffix(const std::string &suf, const std::string &label)
 {
     int n = 0;
     size_t i = 0;
@@ -114,7 +114,7 @@ void SuffixTree::addSuffix(const std::string &suf)
             {
                 // no matching child, remainder of suf becomes new node
                 n2 = nodes.size();
-                nodes.push_back(SuffixNode(suf.substr(i), {}));
+                nodes.push_back(SuffixNode(suf.substr(i), {}, label));
                 nodes[n].ch.push_back(n2);
                 return;
             }
@@ -136,7 +136,7 @@ void SuffixTree::addSuffix(const std::string &suf)
                 auto n3 = n2;
                 // new node for the part in common
                 n2 = nodes.size();
-                nodes.push_back(SuffixNode(sub2.substr(0, j), {n3}));
+                nodes.push_back(SuffixNode(sub2.substr(0, j), {n3}, label));
                 nodes[n3].sub = sub2.substr(j); // old node loses the part in common
                 nodes[n].ch[x2] = n2;
                 break; // continue down the tree

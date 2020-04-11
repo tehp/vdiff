@@ -16,6 +16,6 @@ public:
 
 private:
     std::vector<SuffixNode> nodes;
-    void addSuffix(const std::string &suf);
+    void addSuffix(const std::string &suf, const std::string &label);
 };
 } // namespace vdiff
