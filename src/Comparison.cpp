@@ -3,7 +3,6 @@
 #include <iostream>
 #include <map>
 #include "Comparison.hpp"
-#include <bits/stdc++.h>
 
 using namespace vdiff;
 
