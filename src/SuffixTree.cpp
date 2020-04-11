@@ -15,9 +15,48 @@ SuffixTree::SuffixTree(const std::string &str)
     }
 }
 
-std::vector<SuffixNode> SuffixTree::get_nodes()
+std::list<std::string> SuffixTree::get_nodes()
 {
-    return nodes;
+    std::list<std::string> leafs;
+    std::function<void(int, const std::string &, std::string parent)> f;
+
+    f = [&](int n, const std::string &pre, std::string parent) {
+
+        std::string str = "";
+        auto children = nodes[n].ch;
+
+        // if empty
+        if (children.size() == 0)
+        {
+            // this is a leaf, add to suffix tree leafs
+            leafs.push_back(parent + nodes[n].sub);
+            return;
+        }
+
+        // this is not a leaf
+        parent.append(nodes[n].sub);
+
+        // iterate children
+        auto it = std::begin(children);
+
+        str.append(nodes[n].sub);
+
+        if (it != std::end(children))
+            do
+            {
+                if (std::next(it) == std::end(children))
+                    break;
+                f(*it, pre + "| ", parent);
+                it = std::next(it);
+            } while (true);
+
+        f(children[children.size() - 1], pre + "  ", parent);
+    };
+
+    f(0, "", "");
+
+
+    return leafs;
 }
 
 void SuffixTree::visualize()

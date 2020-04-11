@@ -12,7 +12,7 @@ class SuffixTree
 public:
     SuffixTree(const std::string &str);
     void visualize();
-    std::vector<SuffixNode> get_nodes();
+    std::list<std::string> get_nodes();
 
 private:
     std::vector<SuffixNode> nodes;
