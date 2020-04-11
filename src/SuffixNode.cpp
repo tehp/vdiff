@@ -14,10 +14,22 @@ SuffixNode::SuffixNode(const std::string &sub, std::initializer_list<int> childr
     ch.insert(ch.end(), children);
 }
 
+// SuffixNode::SuffixNode(const std::string &_sub, std::initializer_list<int> children, const std::string &_label)
+// {
+//     sub = _sub;
+//     // label = _label;
+//     ch.insert(ch.end(), children);
+// }
+
 std::string SuffixNode::get_sub()
 {
     return sub;
 }
+
+// std::string SuffixNode::get_label()
+// {
+//     return label;
+// }
 
 bool SuffixNode::operator<(const SuffixNode &node) const
 {
