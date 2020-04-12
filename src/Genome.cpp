@@ -1,7 +1,8 @@
-#include "Genome.hpp"
-#include <string>
-#include <fstream>
 #include <iostream>
+#include <string>
+#include <algorithm>
+#include <fstream>
+#include "Genome.hpp"
 
 using namespace vdiff;
 
