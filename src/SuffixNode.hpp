@@ -1,3 +1,4 @@
+#include <initializer_list>
 #include <functional>
 #include <iostream>
 #include <list>
@@ -9,7 +10,7 @@ class SuffixNode
 {
 public:
     SuffixNode(const std::string &sub, std::initializer_list<int> children);
-     SuffixNode(const std::string &sub, std::initializer_list<int> children, const std::string &label);
+    SuffixNode(const std::string &sub, std::initializer_list<int> children, const std::string &label);
     SuffixNode();
     ~SuffixNode();
     std::string sub;
@@ -19,7 +20,7 @@ public:
     bool operator<(const SuffixNode &node) const;
 
 private:
-     std::string label;
+    std::string label;
 };
 
 } // namespace vdiff
