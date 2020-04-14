@@ -29,7 +29,7 @@ void Comparison::compare_suffix_tree()
 
     // Removing strings of length < 10
     std::cout << "trimming matches..." << std::endl;
-    matches = remove_small_nodes(matches, 10);
+    matches = remove_small_nodes(matches, 800);
 
     std::cout << "number of matches after trim: " << matches.size() << std::endl;
 
@@ -48,31 +48,37 @@ void Comparison::compare_suffix_tree()
 
     std::cout << "number of matches after dupes removed: " << matches.size() << std::endl;
 
-    // // Nodes that occur in both 1 and 2
-    // std::map<std::string, int> strings;
-    // std::list<std::string> strings_shared;
-
-    // for (std::list<std::string>::iterator it = matches.begin(); it != matches.end(); ++it)
-    // {
-    //     std::cout << *it << std::endl;
-    // }
-
-    // for (std::list<std::string>::iterator it = nodes_tree2.begin(); it != nodes_tree2.end(); ++it)
-    // {
-    //     if (strings[*it] == 1)
-    //     {
-    //         strings_shared.push_back(*it);
-    //         std::cout << " [" << *it << "] ";
-    //     }
-    // }
-
-    // std::cout << "\nnum genome1 strings:" << nodes_tree1.size() << std::endl;
-    // std::cout << "num genome2 strings:" << nodes_tree2.size() << std::endl;
-    // std::cout << "num shared strings: " << strings_shared.size() << std::endl;
-
     // Remove strings that are substrings of another string
-    // nodes_tree1 = remove_substrings(nodes_tree1);
-    // nodes_tree2 = remove_substrings(nodes_tree2);
+    std::cout << "finding and removing matches that are substrings of other matches" << std::endl;
+    matches = remove_substrings(matches);
+    std::cout << "number of matches after removing substrings: " << matches.size() << std::endl;
+
+    std::string largest = "";
+    for (std::list<std::string>::iterator it = matches.begin(); it != matches.end(); ++it)
+    {
+        if (it->length() > largest.length())
+        {
+            largest = *it;
+        }
+    }
+
+    create_placements(matches);
+
+    placements.sort();
+
+    // std::cout << largest << std::endl;
+}
+
+int Comparison::create_placements(std::list<std::string> matches)
+{
+    for (std::list<std::string>::iterator it = matches.begin(); it != matches.end(); ++it)
+    {
+        Placement p = Placement(*it, genome1, genome2);
+        p.print_info();
+        placements.push_back(p);
+    }
+
+    return 1;
 }
 
 std::list<std::string> Comparison::remove_small_nodes(std::list<std::string> list, size_t size)
@@ -83,10 +89,7 @@ std::list<std::string> Comparison::remove_small_nodes(std::list<std::string> lis
         if (str.length() < size)
         {
             it = list.erase(it);
-            if (it != list.begin())
-            {
-                std::advance(it, -1);
-            }
+            std::advance(it, -1);
         }
     }
     return list;
@@ -113,14 +116,19 @@ std::list<std::string> Comparison::remove_repeating_nodes(std::list<std::string>
     return list;
 }
 
-std::list<SuffixNode> Comparison::remove_substrings(std::list<SuffixNode> list)
+std::list<std::string> Comparison::remove_substrings(std::list<std::string> list)
 {
-    std::list<SuffixNode> original = list;
-    std::list<SuffixNode>::iterator it = list.begin();
+    std::list<std::string> original = list;
+    std::list<std::string>::iterator it = list.begin();
+
+    int total = list.size();
+    int count = 1;
+
+    std::cout << "removing substrings" << std::endl;
 
     while (it != list.end())
     {
-        if (check_if_substring(it->get_sub(), original))
+        if (check_if_substring(*it, original))
         {
             auto delete_it = it;
             it = next(it);
@@ -130,18 +138,19 @@ std::list<SuffixNode> Comparison::remove_substrings(std::list<SuffixNode> list)
         {
             it = next(it);
         }
-        std::cout << list.size() << std::endl;
+        std::cout << "\e[A";
+        std::cout << "removing substrings [" << count++ << "/" << total << "]" << std::endl;
     }
     return list;
 }
 
-int Comparison::check_if_substring(std::string str, std::list<SuffixNode> list)
+int Comparison::check_if_substring(std::string str, std::list<std::string> list)
 {
-    for (std::list<SuffixNode>::iterator it = list.begin(); it != list.end(); ++it)
+    for (std::list<std::string>::iterator it = list.begin(); it != list.end(); ++it)
     {
-        if (it->get_sub().length() > str.length())
+        if (it->length() > str.length())
         {
-            if (it->get_sub() != str && it->get_sub().find(str) != std::string::npos)
+            if (*it != str && it->find(str) != std::string::npos)
             {
                 return 1;
             }
@@ -149,9 +158,3 @@ int Comparison::check_if_substring(std::string str, std::list<SuffixNode> list)
     }
     return 0;
 }
-
-// SuffixTree Comparison::build_suffix_tree(std::string genome)
-// {
-//     // SuffixTree(genome).visualize();
-//     return SuffixTree(genome);
-// }

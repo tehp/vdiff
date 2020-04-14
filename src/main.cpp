@@ -15,8 +15,8 @@ int main()
     vdiff::Genome cov = vdiff::Genome("COVID-19");
     vdiff::Genome sars = vdiff::Genome("SARS");
 
-    cov.read_file("genomes/cov");
-    sars.read_file("genomes/sars");
+    cov.read_file("genomes/cov_flat");
+    sars.read_file("genomes/sars_flat");
 
     cov.print_info();
     sars.print_info();
