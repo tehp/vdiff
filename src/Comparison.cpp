@@ -6,10 +6,11 @@
 
 using namespace vdiff;
 
-Comparison::Comparison(vdiff::Genome *gen1, vdiff::Genome *gen2)
+Comparison::Comparison(vdiff::Genome *gen1, vdiff::Genome *gen2, int min)
 {
     genome1 = *gen1;
     genome2 = *gen2;
+    min_match_size = min;
 }
 
 Comparison::~Comparison() {}
@@ -29,7 +30,7 @@ void Comparison::compare_suffix_tree()
 
     // Removing strings of length < 10
     std::cout << "trimming matches..." << std::endl;
-    matches = remove_small_nodes(matches, 500);
+    matches = remove_small_nodes(matches, min_match_size);
 
     std::cout << "number of matches after trim: " << matches.size() << std::endl;
 
