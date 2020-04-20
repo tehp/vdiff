@@ -29,7 +29,7 @@ void Comparison::compare_suffix_tree()
 
     // Removing strings of length < 10
     std::cout << "trimming matches..." << std::endl;
-    matches = remove_small_nodes(matches, 800);
+    matches = remove_small_nodes(matches, 500);
 
     std::cout << "number of matches after trim: " << matches.size() << std::endl;
 
@@ -66,7 +66,89 @@ void Comparison::compare_suffix_tree()
 
     placements.sort();
 
-    // std::cout << largest << std::endl;
+    // Optimize for longest set of MUMs that occur in the same order in A and B
+
+    // DP approach to LIS.
+    // "Most-valuable Increasing Subsequence"
+    // based on length of each unique match
+    std::vector<std::pair<int, int>> start_length;
+    for (std::list<Placement>::iterator it = placements.begin(); it != placements.end(); ++it)
+    {
+        start_length.push_back(std::pair<int, int>(it->get_start_B(), it->get_length()));
+    }
+
+    std::vector<std::vector<std::pair<int, int>>> LIS = find_LIS(start_length);
+
+    std::vector<std::pair<int, int>> best = LIS.back();
+
+    for (auto it = placements.begin(); it != placements.end(); ++it)
+    {
+        int found = 0;
+        for (auto it2 = best.begin(); it2 != best.end(); ++it2)
+        {
+            if ((int)it->get_start_B() == it2->first)
+            {
+                // placement is part of best placements
+                found = 1;
+                break;
+            }
+        }
+        if (!found)
+        {
+            // placement isnt one of the best placements
+            it = placements.erase(it);
+            std::advance(it, -1);
+        }
+    }
+
+    int count_matches = 0;
+
+    for (std::list<Placement>::iterator it = placements.begin(); it != placements.end(); ++it)
+    {
+        count_matches += it->get_length();
+    }
+
+    std::cout << "# matching: " << count_matches << "/" << std::min(genome1.get_len(), genome2.get_len()) << std::endl;
+    std::cout << "% matching: " << (double)count_matches / (double)std::min(genome1.get_len(), genome2.get_len()) * 100 << " between: " << genome1.get_name() << " and " << genome2.get_name() << std::endl;
+}
+
+// Takes index, size
+// Optimizes for largest size, with all elements index increasing
+std::vector<std::vector<std::pair<int, int>>> Comparison::find_LIS(std::vector<std::pair<int, int>> &D)
+{
+    std::vector<std::vector<std::pair<int, int>>> L(D.size());
+    L[0].push_back(D[0]);
+
+    for (size_t i = 1; i < D.size(); i++)
+    {
+        for (size_t j = 0; j < i; j++)
+        {
+            if ((D[j].first < D[i].first) && (L[i].size() < L[j].size() + 1))
+            {
+                L[i] = L[j];
+            }
+        }
+        L[i].push_back(D[i]);
+    }
+
+    sort(L.begin(), L.end(), [](const auto &lhs, const auto &rhs) {
+        int sum_l = 0;
+        int sum_r = 0;
+
+        for (auto it_l = lhs.begin(); it_l != lhs.end(); ++it_l)
+        {
+            sum_l += it_l->second;
+        }
+
+        for (auto it_r = rhs.begin(); it_r != rhs.end(); ++it_r)
+        {
+            sum_r += it_r->second;
+        }
+
+        return sum_l < sum_r;
+    });
+
+    return L;
 }
 
 int Comparison::create_placements(std::list<std::string> matches)
@@ -74,7 +156,6 @@ int Comparison::create_placements(std::list<std::string> matches)
     for (std::list<std::string>::iterator it = matches.begin(); it != matches.end(); ++it)
     {
         Placement p = Placement(*it, genome1, genome2);
-        p.print_info();
         placements.push_back(p);
     }
 

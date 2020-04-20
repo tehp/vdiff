@@ -18,6 +18,7 @@ public:
     std::list<std::string> remove_substrings(std::list<std::string>);
     int check_if_substring(std::string str, std::list<std::string>);
     int create_placements(std::list<std::string>);
+    std::vector<std::vector<std::pair<int, int>>> find_LIS(std::vector<std::pair<int, int>> &D);
 
 private:
     Genome genome1;

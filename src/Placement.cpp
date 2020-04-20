@@ -34,7 +34,19 @@ Placement::Placement(std::string _string, Genome A, Genome B)
 
 bool Placement::operator<(const Placement& p) const
 {
-	return string < p.string;
+	return start_A < p.start_A;
+}
+
+size_t Placement::get_start_A() {
+    return start_A;
+}
+
+size_t Placement::get_start_B() {
+    return start_B;
+}
+
+size_t Placement::get_length() {
+    return length;
 }
 
 std::string Placement::get_string() {

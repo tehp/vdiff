@@ -63,6 +63,11 @@ std::string Genome::get_body()
     return body;
 }
 
+std::string Genome::get_name()
+{
+    return name;
+}
+
 void Genome::print_info()
 {
     std::cout << "read genome: " << name << ", length: " << len << std::endl;

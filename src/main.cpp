@@ -12,11 +12,11 @@ using namespace std;
 
 int main()
 {
-    vdiff::Genome cov = vdiff::Genome("COVID-19");
-    vdiff::Genome sars = vdiff::Genome("SARS");
+    vdiff::Genome cov = vdiff::Genome("sars");
+    vdiff::Genome sars = vdiff::Genome("COVID19");
 
-    cov.read_file("genomes/cov_flat");
-    sars.read_file("genomes/sars_flat");
+    cov.read_file("genomes/sars");
+    sars.read_file("genomes/cov");
 
     cov.print_info();
     sars.print_info();

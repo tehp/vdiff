@@ -11,6 +11,7 @@ public:
     ~Genome();
     int read_file(std::string path);
     std::string get_body();
+    std::string get_name();
     int get_len();
     void print_info();
 

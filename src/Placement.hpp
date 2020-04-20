@@ -10,7 +10,10 @@ public:
     ~Placement();
     void print_info();
     std::string get_string();
-    bool operator<(const Placement& p) const;
+    size_t get_start_A();
+    size_t get_start_B();
+    size_t get_length();
+    bool operator<(const Placement &p) const;
 
 private:
     std::string string;
