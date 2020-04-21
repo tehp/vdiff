@@ -19,6 +19,7 @@ int main(int argc, char **argv)
     }
     else
     {
+        // Parse args
         std::string genome1 = argv[1];
         std::string genome2 = argv[2];
 

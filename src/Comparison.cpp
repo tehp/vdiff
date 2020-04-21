@@ -20,12 +20,15 @@ void Comparison::compare_suffix_tree()
     std::string gen1 = genome1.get_body();
     std::string gen2 = genome2.get_body();
 
+    // Build a suffix tree of the two genomes
     SuffixTree tree = SuffixTree(gen1, gen2);
 
+    // Walk the tree, gather matches that fit our match criteria (one child from A, one from B)
     std::list<std::string> matches = tree.get_all_matches();
 
     std::cout << "\nOutputting matches to file: matches.csv ..." << std::endl;
 
+    // Create initial placement list only to be used for outputting CSV. This function will be used again later after trimming.
     create_placements(matches);
 
     std::ofstream out_file;
@@ -76,6 +79,7 @@ void Comparison::compare_suffix_tree()
 
     create_placements(matches);
 
+    // Sort based on A.
     placements.sort();
 
     // Optimize for longest set of MUMs that occur in the same order in A and B
