@@ -70,6 +70,6 @@ std::string Genome::get_name()
 
 void Genome::print_info()
 {
-    std::cout << "read genome: " << name << ", length: " << len << std::endl;
-    std::cout << "A: " << adenine_count << ", C: " << cytosine_count << ", G: " << guanine_count << ", T: " << thymine_count << std::endl;
+    std::cout << "\nRead genome: " << name << ". Genome length: " << len << std::endl;
+    std::cout << "A: " << adenine_count << ", C: " << cytosine_count << ", G: " << guanine_count << ", T: " << thymine_count << "." << std::endl;
 }

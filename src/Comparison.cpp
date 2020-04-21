@@ -24,18 +24,24 @@ void Comparison::compare_suffix_tree()
 
     std::list<std::string> matches = tree.get_all_matches();
 
-    std::cout << "number of matches: " << matches.size() << std::endl;
+    create_placements(matches);
 
-    //tree.visualize();
+    std::ofstream out_file;
+    out_file.open("matches.csv");
+    for (std::list<Placement>::iterator it = placements.begin(); it != placements.end(); ++it) {
+        out_file << it->get_start_A() << "," << it->get_start_B() << "\n";
+    }
+    out_file.close();
+
+    std::cout << "\nNumber of matches found in tree: " << matches.size() << std::endl;
 
     // Removing strings of length < 10
-    std::cout << "trimming matches..." << std::endl;
+    std::cout << "\nTrimming matches of size < " << min_match_size << std::endl;
     matches = remove_small_nodes(matches, min_match_size);
 
-    std::cout << "number of matches after trim: " << matches.size() << std::endl;
+    std::cout << "Number of matches after trim: " << matches.size() << std::endl;
 
     // Sort to make repeats easy to remove
-    std::cout << "sorting matches" << std::endl;
     matches.sort();
 
     // Unique Matches:
@@ -44,15 +50,15 @@ void Comparison::compare_suffix_tree()
     // are not part of any larger sequence (aren't a subsequence)
 
     // Remove dupes from matches
-    std::cout << "removing dupe matches" << std::endl;
+    std::cout << "\nRemoving any duplicate matches." << std::endl;
     matches = remove_repeating_nodes(matches);
 
-    std::cout << "number of matches after dupes removed: " << matches.size() << std::endl;
+    std::cout << "Number of matches removing duplicates: " << matches.size() << std::endl;
 
     // Remove strings that are substrings of another string
-    std::cout << "finding and removing matches that are substrings of other matches" << std::endl;
+    std::cout << "\nFinding and removing matches that are substrings of other matches" << std::endl;
     matches = remove_substrings(matches);
-    std::cout << "number of matches after removing substrings: " << matches.size() << std::endl;
+    std::cout << "\nNumber of matches after removing substrings: " << matches.size() << std::endl;
 
     std::string largest = "";
     for (std::list<std::string>::iterator it = matches.begin(); it != matches.end(); ++it)
@@ -62,6 +68,8 @@ void Comparison::compare_suffix_tree()
             largest = *it;
         }
     }
+
+    placements.clear();
 
     create_placements(matches);
 
@@ -108,6 +116,8 @@ void Comparison::compare_suffix_tree()
     {
         count_matches += it->get_length();
     }
+
+    std::cout << "\nResults:" << std::endl;
 
     std::cout << "# matching: " << count_matches << "/" << std::min(genome1.get_len(), genome2.get_len()) << std::endl;
     std::cout << "% matching: " << (double)count_matches / (double)std::min(genome1.get_len(), genome2.get_len()) * 100 << " between: " << genome1.get_name() << " and " << genome2.get_name() << std::endl;
@@ -207,7 +217,7 @@ std::list<std::string> Comparison::remove_substrings(std::list<std::string> list
     int total = list.size();
     int count = 1;
 
-    std::cout << "removing substrings" << std::endl;
+    std::cout << "Removing substrings..." << std::endl;
 
     while (it != list.end())
     {
@@ -222,7 +232,7 @@ std::list<std::string> Comparison::remove_substrings(std::list<std::string> list
             it = next(it);
         }
         std::cout << "\e[A";
-        std::cout << "removing substrings [" << count++ << "/" << total << "]" << std::endl;
+        std::cout << "Removing substrings... [" << count++ << "/" << total << "]" << std::endl;
     }
     return list;
 }
@@ -233,7 +243,7 @@ int Comparison::check_if_substring(std::string &str, std::vector<std::string> &l
     {
         if (it->length() > str.length())
         {
-            if (*it != str && it->find(str) != std::string::npos)
+            if (it->find(str) != std::string::npos)
             {
                 return 1;
             }

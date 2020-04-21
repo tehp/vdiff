@@ -23,6 +23,7 @@ int main(int argc, char **argv)
         std::string genome2 = argv[2];
 
         std::istringstream ss(argv[3]);
+
         int min_match_size;
         ss >> min_match_size;
 
@@ -35,7 +36,7 @@ int main(int argc, char **argv)
         g1.print_info();
         g2.print_info();
 
-        std::cout << "min match size: " << min_match_size << std::endl;
+        std::cout << "\nConfiguration:\nMinimum match size: " << min_match_size << "." << std::endl;
 
         vdiff::Comparison comparison = vdiff::Comparison(&g1, &g2, min_match_size);
 
