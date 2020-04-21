@@ -1,6 +1,5 @@
 #include <string>
 #include <iostream>
-#include <cstdlib>
 #include "Genome.hpp"
 #include "Placement.hpp"
 
@@ -54,7 +53,7 @@ std::string Placement::get_string() {
 }
 
 void Placement::print_info() {
-    std::cout << "placement:\nlength: " << length << ". start_A: " << start_A << ". start_B: " << start_B << ". difference: " << abs(start_A - start_B) << std::endl;
+    std::cout << "placement:\nlength: " << length << ". start_A: " << start_A << ". start_B: " << start_B << ". difference: " << abs((int)(start_A - start_B)) << std::endl;
 }
 
 Placement::~Placement() {}
