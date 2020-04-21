@@ -24,11 +24,14 @@ void Comparison::compare_suffix_tree()
 
     std::list<std::string> matches = tree.get_all_matches();
 
+    std::cout << "\nOutputting matches to file: matches.csv ..." << std::endl;
+
     create_placements(matches);
 
     std::ofstream out_file;
     out_file.open("matches.csv");
-    for (std::list<Placement>::iterator it = placements.begin(); it != placements.end(); ++it) {
+    for (std::list<Placement>::iterator it = placements.begin(); it != placements.end(); ++it)
+    {
         out_file << it->get_start_A() << "," << it->get_start_B() << "\n";
     }
     out_file.close();
