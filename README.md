@@ -1,6 +1,8 @@
 # VDIFF
 A tool for comparing virus genomes written C++.
 
+[Introduction and Demonstration video](https://www.youtube.com/watch?v=AkUEvy7Igu0)
+
 ## Prerequisites
  - C++17 with `g++-9` in your path.
  - `make`
