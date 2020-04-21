@@ -200,7 +200,8 @@ std::list<std::string> Comparison::remove_repeating_nodes(std::list<std::string>
 
 std::list<std::string> Comparison::remove_substrings(std::list<std::string> list)
 {
-    std::list<std::string> original = list;
+    std::vector<std::string> original(list.begin(), list.end());
+
     std::list<std::string>::iterator it = list.begin();
 
     int total = list.size();
@@ -226,9 +227,9 @@ std::list<std::string> Comparison::remove_substrings(std::list<std::string> list
     return list;
 }
 
-int Comparison::check_if_substring(std::string str, std::list<std::string> list)
+int Comparison::check_if_substring(std::string &str, std::vector<std::string> &list)
 {
-    for (std::list<std::string>::iterator it = list.begin(); it != list.end(); ++it)
+    for (std::vector<std::string>::iterator it = list.begin(); it != list.end(); ++it)
     {
         if (it->length() > str.length())
         {
