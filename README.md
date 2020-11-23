@@ -1,5 +1,6 @@
 # VDIFF
 A tool for comparing virus genomes written C++.
+This is a school project from early 2020.
 
 [Introduction and Demonstration video](https://www.youtube.com/watch?v=AkUEvy7Igu0)
 
